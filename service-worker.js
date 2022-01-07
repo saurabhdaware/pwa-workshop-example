@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pwa-workshop-v8';
+const CACHE_NAME = 'pwa-workshop-v9';
 
 const URLS_TO_CACHE = [
   './',
@@ -46,3 +46,14 @@ self.addEventListener('activate', (e) => {
     }))
   }));
 });
+
+function sendDataToServer() {
+  console.log('sendDataToServer here');
+}
+
+
+self.addEventListener('sync', (event) => {
+  if (event.tag == 'pwa-workshop-sync') {
+    event.waitUntil(sendDataToServer());
+  }
+})

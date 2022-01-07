@@ -11,6 +11,7 @@
   <p class="text">Hey there!</p>
   <button style="display: none" class="add-to-homescreen-button">Add to Homescreen</button>
 
+  <button class="send-data-button">Send data to server</button>
   <script>
     // registration of service worker
     if('serviceWorker' in navigator) {
@@ -52,6 +53,17 @@
         });
       });
     });
+
+
+
+
+
+    // BACKGROUND SYNC
+    document.querySelector('button.send-data-button').addEventListener('click', () => {
+      navigator.serviceWorker.ready.then(function(swRegistration) {
+        return swRegistration.sync.register('pwa-workshop-sync');
+      });
+    })
   </script>
   <script src="./app.js"></script>
 </body>
