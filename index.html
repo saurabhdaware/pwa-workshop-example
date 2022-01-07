@@ -9,6 +9,7 @@
 <body>
   <h1>PWA Workshop Example</h1>
   <p class="text">Hey there!</p>
+  <button style="display: none" class="add-to-homescreen-button">Add to Homescreen</button>
 
   <script>
     // registration of service worker
@@ -22,6 +23,35 @@
         }
       })
     };
+
+
+
+    let deferredPromptEvent;
+    const addToHomescreenButtonEl = document.querySelector('button.add-to-homescreen-button');
+
+    // Add to homescreen button logic
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault(); // prevents the default banner
+      deferredPromptEvent = e; // store that event
+      addToHomescreenButtonEl.style.display = 'block'; // make our add to homescreen button visible
+
+      // 
+      addToHomescreenButtonEl.addEventListener('click', (e) => {
+        // hide our user interface that shows our A2HS button
+        addToHomescreenButtonEl.style.display = 'none';
+        // Show the prompt
+        deferredPromptEvent.prompt();
+        // Wait for the user to respond to the prompt
+        deferredPromptEvent.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the A2HS prompt');
+          } else {
+            console.log('User dismissed the A2HS prompt');
+          }
+          deferredPromptEvent = null;
+        });
+      });
+    });
   </script>
   <script src="./app.js"></script>
 </body>

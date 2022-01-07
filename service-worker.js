@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pwa-workshop-v7';
+const CACHE_NAME = 'pwa-workshop-v8';
 
 const URLS_TO_CACHE = [
   './',
