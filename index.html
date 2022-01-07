@@ -3,6 +3,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="manifest" href="./app.webmanifest">
+  <link rel="apple-touch-icon" href="./logo-192.png">
   <meta name="theme-color" content="#09f">
   <title>PWA Example</title>
 </head>
@@ -56,14 +57,80 @@
 
 
 
-
-
     // BACKGROUND SYNC
     document.querySelector('button.send-data-button').addEventListener('click', () => {
       navigator.serviceWorker.ready.then(function(swRegistration) {
         return swRegistration.sync.register('pwa-workshop-sync');
       });
     })
+
+
+    // PUSH NOTIFICATIONS ON FRONTEND
+
+    function showNotificationPopup() {
+      Notification.requestPermission(function(status) {
+        console.log('Notification permission status:', status);
+
+        displayNotification();
+      });
+    }
+
+
+    function displayNotification() {
+      if (Notification.permission == 'granted') {
+
+        const notificationOptions = {
+          body: 'Hello from the workshop!!!',
+          icon: './logo-192.png',
+          vibrate: [100, 50, 100],
+          data: {
+            dateOfArrival: Date.now(),
+            primaryKey: 1
+          }
+        };
+        navigator.serviceWorker.ready.then(function(reg) {
+          reg.showNotification('Hello world!', notificationOptions);
+        }).catch(console.log);
+      }
+    }
+
+  
+    showNotificationPopup();
+
+
+
+    // // PUSH NOTIFICATION FROM BACKEND
+
+    // Refer to https://github.com/saurabhdaware/pwainit-node-pushapi for backend code
+
+    // const publicVapidKey = 'BNmBkye9opIKh6TuGwPqOEz4DkA306G5QK62QokEtke-SkNiZiGzDkZu-NGqP4XX94uRZdjNt8s2pfEv_gvnvsM';  
+
+    //  // Helper function to convert Base 64
+    // function urlB64ToUint8Array(base64String) {
+    //   const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    //   const base64 = (base64String + padding)
+    //     .replace(/-/g, '+')
+    //     .replace(/_/g, '/');
+    //       const rawData = window.atob(base64);
+    //       return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
+        
+    // }
+
+    // const applicationServerKey = urlB64ToUint8Array(publicVapidKey);
+
+    // navigator.serviceWorker.ready.then(function(reg) {
+    //   reg.pushManager.subscribe({userVisibleOnly: true, applicationServerKey: applicationServerKey})
+    //     .then(function(sub) {
+    //       // Pass sub to Server and store it. You will be using it to push notifications from your server
+    //       fetch('http://localhost:3000/subscribe',{
+    //         method:'POST',
+    //         headers:{
+    //           'Content-Type':'application/json'
+    //         },
+    //         body: JSON.stringify(sub)
+    //       })
+    //     })
+    // });
   </script>
   <script src="./app.js"></script>
 </body>

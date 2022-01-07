@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pwa-workshop-v9';
+const CACHE_NAME = 'pwa-workshop-v10';
 
 const URLS_TO_CACHE = [
   './',
@@ -47,6 +47,7 @@ self.addEventListener('activate', (e) => {
   }));
 });
 
+// BACKGROUND SYNC
 function sendDataToServer() {
   console.log('sendDataToServer here');
 }
@@ -57,3 +58,22 @@ self.addEventListener('sync', (event) => {
     event.waitUntil(sendDataToServer());
   }
 })
+
+
+// PUSH API (For Backend)
+self.addEventListener('push', function(e) {
+  const data = JSON.parse(e.data.text());
+  const options = {
+    body: data.body,
+    icon: './logo-192.png',
+    vibrate: [100, 50, 100],
+    data: {
+      dateOfArrival: Date.now(),
+      primaryKey: 1
+    }
+  };
+
+  e.waitUntil(
+    self.registration.showNotification(data.title, options)
+  );
+});
